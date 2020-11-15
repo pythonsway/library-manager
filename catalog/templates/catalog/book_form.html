@@ -1,0 +1,66 @@
+{% extends "catalog/base.html" %}
+
+{% load static %}
+
+{% block title %}
+Book
+{% endblock %}
+
+{% block content %}
+
+<section class="page-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="p-5">
+                    <h2 class="mb-4">Book entry</h2>
+                    <form enctype="multipart/form-data" method="post" class="mb-4">
+                        {% csrf_token %}
+                        {% include 'catalog/includes/form.html' %}
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <a href="{% url 'catalog' %}" class="btn btn-outline-secondary" role="button">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+
+
+(function($) {
+    // $('select').select2({
+    //     theme: 'bootstrap4',
+    // });
+    $.fn.select2.defaults.set('theme', 'bootstrap4');
+    $.fn.select2.defaults.set('width', '100%');
+
+    $('#add-form').click(function() {
+        var index = $('#id_inline_test_models-TOTAL_FORMS').val()
+        var newTable = $('#id_inline_test_models-__prefix__-DELETE').parents('table').clone()
+        newTable.find(':input').each(function() {
+            for (attr of ['name', 'id'])
+                $(this).attr(
+                    attr,
+                    $(this).attr(attr).replace('__prefix__', index)
+                )
+        })
+        newTable.insertBefore($(this))
+        $('#id_inline_test_models-TOTAL_FORMS').val(
+            parseInt($('#id_inline_test_models-TOTAL_FORMS').val()) + 1
+        )
+        newTable.slideDown()
+    })
+})($)
+</script>
+
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'catalog/css/select2-bootstrap4.css' %}">
+{% endblock %}

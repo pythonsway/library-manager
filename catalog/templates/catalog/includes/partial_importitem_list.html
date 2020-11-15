@@ -1,0 +1,22 @@
+{% for book in google_books %}
+<tr>
+    {% if book.imageLinks.thumbnail %} {{client.user}}
+    <td><img class="" src="{{ book.imageLinks.thumbnail }}" width="50" alt="{{ book.title }}"></td>
+    {% else %}
+    <td><img class="" src="#" width="50" alt="-"></td>
+    {% endif %}
+    <td>{{ book.title|default:"-" }}</td>
+    <td>{{ book.authors|join:', '|default:"-" }}</td>
+    <td class="text-right">{{ book.publishedDate|default:"-" }}</td>
+    <td class="text-right">{{ book.industryIdentifiers.1.identifier|default:"-" }}</td>
+    <td class="text-right">{{ book.pageCount|default:"-" }}</td>
+    <td class="text-right">{{ book.language|default:"-" }}</td>
+    <td>
+        <form action="{% url 'google-save' %}" method="post" class="js-import">
+            {% csrf_token %}
+            <input type="hidden" id="book" name="book" value="{{ book }}">
+            <input type="submit" value="&crarr;" class="btn btn-outline-success btn-sm">
+        </form>
+    </td>
+</tr>
+{% endfor %}

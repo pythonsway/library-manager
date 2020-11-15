@@ -1,0 +1,33 @@
+{% extends "catalog/base.html" %}
+
+{% load static %}
+
+{% block title %}
+Book details
+{% endblock %}
+
+{% block content %}
+
+<section class="page-section m-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <h2 class="mb-4">Book details</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">{{ book.title|default:"-" }}</h3>
+                        <img class="img-fluid rounded mx-auto my-5 d-block" src="{{ book.cover.url }}" alt="{{ book.title }}">
+                        <p><strong>Authors:</strong> {{ book.authors.all|join:', '|default:"-" }}</a></p>
+                        <p><strong>Publication date:</strong> {{ book.pub_date|date:"Y"|default:"-" }}</p>
+                        <p><strong>ISBN:</strong> {{ book.isbn|default:"-" }}</p>
+                        <p><strong>Number of pages:</strong> {{ book.pages_num|default:"-" }}</p>
+                        <p><strong>Language:</strong> {{ book.language|default:"-" }}</p>
+                        <a href="{% url 'catalog' %}" class="btn btn-outline-secondary" role="button">Go back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

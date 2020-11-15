@@ -1,0 +1,131 @@
+{% extends "catalog/base.html" %}
+
+{% load query_tags static %}
+
+{% block title %}
+Catalog
+{% endblock %}
+
+{% block content %}
+
+<section class="page-section">
+    <div class="container">
+        <div class="row">
+            <div class="col mx-auto">
+                <div class="p-5">
+                    <h2 class="mb-4">List of books</h2>
+                    <div class="row mx-3 mt-5 row justify-content-between">
+                        <div class="col-sm-4 my-3">
+                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#searchModal">Search</button>
+                        </div>
+                        <div class="col-sm-3 my-3 offset-sm-2 mr-auto">
+                            <a href="{% url 'book-create' %}" class="btn btn-secondary btn-block" role="button">Add</a>
+                        </div>
+                        <div class="col-sm-3 my-3 mr-auto">
+                            <a href="{% url 'google-search' %}" class="btn btn-secondary btn-block" role="button">Google Books</a>
+                        </div>
+                    </div>
+                    {% if book_list %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-4" id="orderitems-table">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>Cover</th>
+                                    <th>Title</th>
+                                    <th>Authors</th>
+                                    <th class="text-right">Date</th>
+                                    <th class="text-right">ISBN</th>
+                                    <th class="text-right">No pages</th>
+                                    <th class="text-right">Language</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for book in book_list %}
+                                <tr>
+                                    <td><img class="" src="{{ book.cover.url }}" width="50" alt="{{ book.title }}"></td>
+                                    <td><a href="{% url 'book-details' book.slug %}">{{ book.title|default:"-" }}</a></td>
+                                    <td>{{ book.authors.all|join:', '|default:"-" }}</td>
+                                    <td class="text-right">{{ book.pub_date|date:"Y"|default:"-" }}</td>
+                                    <td class="text-right">{{ book.isbn|default:"-" }}</td>
+                                    <td class="text-right">{{ book.pages_num|default:"-" }}</td>
+                                    <td class="text-right">{{ book.language|default:"-" }}</td>
+                                    <td>
+                                        <a href="{% url 'book-update' book.slug %}" class="btn btn-outline-info btn-sm">&plusmn;</a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'book-delete' book.slug %}" class="btn btn-outline-danger btn-sm">&times;</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if is_paginated %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.previous_page_number %}">&laquo;</a></li>
+                            {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">&laquo;</a></li>
+                            {% endif %}
+                            {% for i in paginator.page_range %}
+                            {% if page_obj.number == i %}
+                            <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="?{% url_replace page=i %}">{{ i }}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.next_page_number %}">&raquo;</a></li>
+                            {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">&raquo;</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+
+
+
+
+
+                    {% else %}
+                    <div class="row mt-5">
+                        <div class="col">
+                            <p>Catalog is empty.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Search in catalog</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="get" class="mb-4" novalidate>
+                <div class="modal-body">
+                    {% include 'catalog/includes/form.html' %}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Search</button>
+                    <button type="reset" class="btn btn-outline-secondary" value="Reset">Reset</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

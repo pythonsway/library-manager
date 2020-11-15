@@ -1,0 +1,28 @@
+{% extends "catalog/base.html" %}
+
+{% load static %}
+
+{% block title %}
+API
+{% endblock %}
+
+{% block content %}
+
+<section class="page-section m-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <h2 class="mb-4">API</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Info about usage</h3>
+                        <p class="card-text">You can perform a book search by sending an HTTP GET request to the following URI:</p>
+                        <a href="{% url 'catalog' %}" class="card-link">{% url 'catalog' %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
