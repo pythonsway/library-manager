@@ -1,5 +1,5 @@
 # List of ISO 639-1 codes
-languages = [('ab', 'Abkhaz'),
+LANGUAGES = [('ab', 'Abkhaz'),
              ('aa', 'Afar'),
              ('af', 'Afrikaans'),
              ('ak', 'Akan'),

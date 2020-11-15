@@ -1,11 +1,12 @@
-from rest_framework import viewsets
-from rest_framework import permissions
+from catalog.models import Book
+from rest_framework import generics
+
+from .filters import BookFilter
 from .serializers import BookSerializer
 
-from catalog.models import Book
 
-
-class BookViewSet(viewsets.ModelViewSet):
-    """API endpoint that allows Books to be viewed"""
+class BookList(generics.ListAPIView):
+    """List all books"""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    filterset_class = BookFilter

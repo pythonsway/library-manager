@@ -1,16 +1,15 @@
 from django import template
 from django.utils.http import urlencode
 
-
 register = template.Library()
+
 
 @register.filter
 def field_type(bound_field):
     return bound_field.field.widget.__class__.__name__
 
+
 # CSS classes in Bootstrap forms
-# ignore the 'is-valid' and 'is-invalid'
-# 'form-check' for checkboxes and radio
 @register.filter
 def input_class(bound_field):
     css_class = ''

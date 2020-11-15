@@ -10,17 +10,24 @@ API
 
 <section class="page-section m-5">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10 col-sm-12">
-                <h2 class="mb-4">API</h2>
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="card-title text-center">Info about usage</h3>
-                        <p class="card-text">You can perform a book search by sending an HTTP GET request to the following URI:</p>
-                        <a href="{% url 'catalog' %}" class="card-link">{% url 'catalog' %}</a>
-                    </div>
-                </div>
-            </div>
+        <div class="jumbotron">
+            <h2 class="mb-4">API</h2>
+            <p class="lead">Info about usage</p>
+            <hr class="my-4">
+            <p>You can perform a book search by sending an HTTP GET request to the following URI:</p>
+            <p><code>{{ domain }}{% url 'api-books' %}</code></p>
+            <h3 class="mb-4">Allowed parameters:</h3>
+            <ul class="list-group">
+                <li class="list-group-item">title</li>
+                <li class="list-group-item">author</li>
+                <li class="list-group-item">start_date</li>
+                <li class="list-group-item">end_date</li>
+                <li class="list-group-item">language</li>
+            </ul>
+            <p class="card-text">Example:</p>
+            <p><code>{{ domain }}{% url 'api-books' %}?title=rich&author=david&start_date=2010&end_date=2015&language=english</code></p>
+            <a class="btn btn-primary btn-lg" href="{% url 'api-books' %}" role="button">API</a>
+            <a href="{% url 'catalog' %}" class="btn btn-outline-secondary" role="button">Go back</a>
         </div>
     </div>
 </section>

@@ -152,6 +152,10 @@ def google_save(request):
                     image_dest.write(chunk)
         language_code = google_book.get('language')
         partial_date = google_book.get('publishedDate')
+        # if partial_date:
+        #     year_pattern = re.compile(r'(\d{4})')
+        #     partial_date = year_pattern.search(partial_date).group()
+        #     print(partial_date)
         if partial_date and len(partial_date) < 5:
             partial_date = f'{partial_date}-01-01'
         pub_date = partial_date

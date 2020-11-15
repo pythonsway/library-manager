@@ -1,7 +1,9 @@
-from django.core.validators import RegexValidator
-from django.utils.text import slugify
+from datetime import date
+
+from django.core.validators import MaxValueValidator, RegexValidator
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 
 class Language(models.Model):
@@ -29,17 +31,22 @@ class Book(models.Model):
     """Book details."""
     title = models.CharField(max_length=150, help_text='Book title')
     authors = models.ManyToManyField(Author, help_text='Author(s)')
-    pub_date = models.DateField(null=True, blank=True, help_text='Publication date')
-    isbn = models.CharField('ISBN', max_length=13, null=True, blank=True, unique=True, validators=[RegexValidator(regex='\d{13}')],
+    # pub_date = models.PositiveIntegerField(null=True, blank=True,
+    #                                        validators=[MaxValueValidator=],
+    #                                        help_text='Publication date')
+    pub_date = models.DateField(null=True, blank=True,
+                                validators=[MaxValueValidator(limit_value=date.today)],
+                                help_text='Publication date')
+    isbn = models.CharField('ISBN', max_length=13, null=True, blank=True,
+                            unique=True, validators=[RegexValidator(regex='\d{13}')],
                             help_text='ISBN-13 (unmbers only)')
     pages_num = models.PositiveIntegerField(default=1, null=True, blank=True,
                                             help_text='Number of pages')
-    cover = models.ImageField(
-        upload_to='covers/', default='covers/default.jpg', help_text='Photo cover')
-    language = models.ForeignKey(Language,
-                                 on_delete=models.SET_NULL, null=True, blank=True, help_text='Natural language')
+    cover = models.ImageField(upload_to='covers/', default='covers/default.jpg',
+                              help_text='Photo cover')
+    language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True,
+                                 blank=True, help_text='Natural language')
     slug = models.SlugField(max_length=300)
-
 
     class Meta:
         ordering = ['title', ]

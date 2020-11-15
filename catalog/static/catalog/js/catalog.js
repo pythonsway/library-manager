@@ -9,7 +9,6 @@ $(function () {
     const form = $(this);
     let page = $('#js-page');
     let startIndex = $('#js-index');
-    // $('#js-load-spinner').removeAttr('hidden');
     $('#js-load-button').prop('disabled', true);
     $('#js-load-spinner').show();
     $.ajax({
@@ -25,10 +24,8 @@ $(function () {
           form.hide();
         }
         $('#js-search-append').append(data.search_html);
-        // $('#js-load-spinner').css('display': 'none');
         $('#js-load-spinner').hide();
         $('#js-load-button').removeAttr('disabled');
-        // $('#js-load-spinner').prop('hidden', true);
       }
     });
     return false;
@@ -50,11 +47,4 @@ $(function () {
     });
     return false;
   });
-});
-
-(function ($) {
-
-
-
-
 });

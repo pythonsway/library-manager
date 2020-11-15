@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'rest_framework',
     'widget_tweaks',
     'catalog.apps.CatalogConfig',
@@ -50,9 +51,11 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-    'DATETIME_FORMAT': '%Y-%m-%d',
-
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.SearchFilter'],
+    'SEARCH_PARAM': 'q',
+    'PAGE_SIZE': 40,
+    'DATE_FORMAT': '%Y',
+    'DATE_INPUT_FORMATS': '%Y',
 }
 
 MIDDLEWARE = [
@@ -70,7 +73,7 @@ ROOT_URLCONF = 'libmanager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -138,6 +141,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATE_FORMAT = '%Y-%m-%d'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
