@@ -41,7 +41,7 @@ $(function () {
         type: form.attr('method'),
         dataType: 'json',
         success: function (data) {
-          console.log(data);
+          // console.log(data);
         }
       });
     });

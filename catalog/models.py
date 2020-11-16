@@ -31,9 +31,6 @@ class Book(models.Model):
     """Book details."""
     title = models.CharField(max_length=150, help_text='Book title')
     authors = models.ManyToManyField(Author, help_text='Author(s)')
-    # pub_date = models.PositiveIntegerField(null=True, blank=True,
-    #                                        validators=[MaxValueValidator=],
-    #                                        help_text='Publication date')
     pub_date = models.DateField(null=True, blank=True,
                                 validators=[MaxValueValidator(limit_value=date.today)],
                                 help_text='Publication date')
@@ -42,7 +39,7 @@ class Book(models.Model):
                             help_text='ISBN-13 (unmbers only)')
     pages_num = models.PositiveIntegerField(default=1, null=True, blank=True,
                                             help_text='Number of pages')
-    cover = models.ImageField(upload_to='covers/', default='covers/default.jpg',
+    cover = models.ImageField(upload_to='covers/', default='default.jpg',
                               help_text='Photo cover')
     language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True,
                                  blank=True, help_text='Natural language')
