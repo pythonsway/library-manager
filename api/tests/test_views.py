@@ -11,7 +11,7 @@ class BookListApiTest(APITestCase):
     def setUp(self):
         title = 'Django? Is that Spanish?'
         author = Author.objects.create(name='Joe Black')
-        pub_date = datetime.datetime(2010, 5, 17)
+        pub_date = datetime(2010, 5, 17)
         isbn = 1111111111111
         pages_num = 999
         language = Language.objects.create(name='English', code='en')

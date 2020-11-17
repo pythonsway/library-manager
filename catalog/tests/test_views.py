@@ -49,7 +49,7 @@ class BookListViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
         self.assertTrue(response.context['is_paginated'] is True)
-        self.assertTrue(len(response.context['author_list']) == 5)
+        self.assertTrue(len(response.context['book_list']) == 5)
 
 
 class BookCreatetViewTest(TestCase):
@@ -57,7 +57,7 @@ class BookCreatetViewTest(TestCase):
     def setUp(self):
         title = 'Django? Is that Spanish?'
         author = Author.objects.create(name='Joe Black')
-        pub_date = datetime.datetime(2010, 5, 17)
+        pub_date = datetime(2010, 5, 17)
         isbn = 1111111111111
         pages_num = 999
         language = Language.objects.create(name='English', code='en')
@@ -86,7 +86,7 @@ class BookUpdateViewTest(TestCase):
     def setUp(self):
         title = 'Django? Is that Spanish?'
         author = Author.objects.create(name='Joe Black')
-        pub_date = datetime.datetime(2010, 5, 17)
+        pub_date = datetime(2010, 5, 17)
         isbn = 1111111111111
         pages_num = 999
         language = Language.objects.create(name='English', code='en')
@@ -99,13 +99,14 @@ class BookUpdateViewTest(TestCase):
         Book.objects.get(id=1).authors.add(author)
 
     def test_uses_correct_template(self):
-        response = self.client.get(reverse('book-update'))
+        url = reverse('book-update', kwargs={'slug': 'django-is-that-spanish-999'})
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'catalog/book_form.html')
 
     def test_redirects_to_list_view_on_success(self):
-        response = self.client.post(reverse('book-update'),
-                                    {'title': 'Zero To One', })
+        url = reverse('book-update', kwargs={'slug': 'django-is-that-spanish-999'})
+        response = self.client.post(url, {'title': 'Zero To One', })
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/catalog/'))
 
@@ -115,7 +116,7 @@ class BookDeleteViewTest(TestCase):
     def setUp(self):
         title = 'Django? Is that Spanish?'
         author = Author.objects.create(name='Joe Black')
-        pub_date = datetime.datetime(2010, 5, 17)
+        pub_date = datetime(2010, 5, 17)
         isbn = 1111111111111
         pages_num = 999
         language = Language.objects.create(name='English', code='en')
@@ -128,12 +129,14 @@ class BookDeleteViewTest(TestCase):
         Book.objects.get(id=1).authors.add(author)
 
     def test_uses_correct_template(self):
-        response = self.client.get(reverse('book-delete'))
+        url = reverse('book-delete', kwargs={'slug': 'django-is-that-spanish'})
+        response = self.client.post(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'catalog/book_confirm_delete.html')
 
     def test_redirects_to_list_view_on_success(self):
-        response = self.client.post(reverse('book-delete'))
+        url = reverse('book-delete', kwargs={'slug': 'django-is-that-spanish'})
+        response = self.client.post(url)
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/catalog/'))
 
@@ -159,7 +162,7 @@ class GoogleSaveViewTest(TestCase):
     def setUp(self):
         title = 'Django? Is that Spanish?'
         author = Author.objects.create(name='Joe Black')
-        pub_date = datetime.datetime(2010, 5, 17)
+        pub_date = datetime(2010, 5, 17)
         isbn = 1111111111111
         pages_num = 999
         language = Language.objects.create(name='English', code='en')
@@ -172,7 +175,9 @@ class GoogleSaveViewTest(TestCase):
         Book.objects.get(id=1).authors.add(author)
 
     def test_redirects_to_detail_view_if_exists(self):
-        response = self.client.post(reverse('google-save'),
-                                    {'isbn': '1111111111111', })
+        url = reverse('google-save')
+        data = "{'industryIdentifiers': [{'type': 'ISBN_13', 'identifier': '1111111111111'}]}"
+        response = self.client.post(url,
+                                    {'book': data, })
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/catalog/'))
