@@ -35,7 +35,7 @@ class Book(models.Model):
                                 validators=[MaxValueValidator(limit_value=date.today)],
                                 help_text='Publication date')
     isbn = models.CharField('ISBN', max_length=13, null=True, blank=True,
-                            unique=True, validators=[RegexValidator(regex='\d{13}')],
+                            unique=True, validators=[RegexValidator(regex=r'\d{13}')],
                             help_text='ISBN-13 (unmbers only)')
     pages_num = models.PositiveIntegerField(default=1, null=True, blank=True,
                                             help_text='Number of pages')
