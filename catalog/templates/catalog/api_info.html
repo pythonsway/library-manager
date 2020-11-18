@@ -15,7 +15,7 @@ API
             <p class="lead">Info about usage</p>
             <hr class="my-4">
             <p>You can perform a book search by sending an HTTP GET request to the following URI:</p>
-            <p><code>{{ domain }}{% url 'api-books' %}</code></p>
+            <p><code>{{ request.scheme }}://{{ request.get_host }}{% url 'api-books' %}</code></p>
             <h3 class="mb-4">Allowed parameters:</h3>
             <ul class="list-group">
                 <li class="list-group-item">title</li>
@@ -25,7 +25,7 @@ API
                 <li class="list-group-item">language</li>
             </ul>
             <p class="card-text">Example:</p>
-            <p><code>{{ domain }}{% url 'api-books' %}?title=rich&author=david&start_date=2010&end_date=2015&language=english</code></p>
+            <p><code>{{ request.scheme }}://{{ request.get_host }}{% url 'api-books' %}?title=rich&author=david&start_date=2010&end_date=2015&language=english</code></p>
             <p class="card-text">If the request succeeds, the server responds with a 200 OK HTTP status code the results in JSON:</p>
             <p><code>{
                 "count": 1,
@@ -40,7 +40,7 @@ API
                         "pub_date": "2012",
                         "isbn": "9780857386809",
                         "pages_num": 432,
-                        "cover": "http://127.0.0.1:8000/media/covers/RicherThanGod.jpg",
+                        "cover": "{{ request.scheme }}://{{ request.get_host }}/media/covers/RicherThanGod.jpg",
                         "language": "English"
                     }
                 ]

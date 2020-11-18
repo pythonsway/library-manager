@@ -146,7 +146,7 @@ class ApiInfoViewTest(TestCase):
     def test_uses_correct_template(self):
         response = self.client.get(reverse('api-info'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'catalog/api-info.html')
+        self.assertTemplateUsed(response, 'catalog/api_info.html')
 
 
 class GoogleSearchViewTest(TestCase):

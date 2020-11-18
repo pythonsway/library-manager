@@ -34,16 +34,14 @@ $(function () {
   // google-save
   $('#js-search-append').on('submit', '.js-import', function () {
     const form = $(this);
-    form.closest('tr').hide(1000, function () {
-      $.ajax({
-        url: form.attr('action'),
-        data: form.serialize(),
-        type: form.attr('method'),
-        dataType: 'json',
-        success: function (data) {
-          // console.log(data);
-        }
-      });
+    $.ajax({
+      url: form.attr('action'),
+      data: form.serialize(),
+      type: form.attr('method'),
+      dataType: 'json',
+      success: function (data) {
+        form.closest('tr').hide(1000);
+      }
     });
     return false;
   });

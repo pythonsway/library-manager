@@ -1,17 +1,20 @@
 import os
 from ast import literal_eval
+from io import BytesIO
 
 import requests
 from dal import autocomplete
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.files.storage import default_storage
+from django.core.files import File
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.text import slugify
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
+from PIL import Image
 
 from .forms import BookForm, BookSearchForm, GoogleSearchForm
 from .models import Author, Book, Language
@@ -73,8 +76,7 @@ class BookDeleteView(SuccessMessageMixin, DeleteView):
 
 
 def api_info(request):
-    messages.success(request, 'Book saved')
-    return render(request, 'catalog/api-info.html')
+    return render(request, 'catalog/api_info.html')
 
 
 def google_search(request):
@@ -141,26 +143,18 @@ def google_save(request):
             messages.info(request, f'{title} already exists')
             return redirect('catalog')
         pages_num = google_book.get('pageCount')
-        image_url = google_book.get('imageLinks', {}).get('thumbnail')
-        img_name = title.replace(' ', '')
-        image_path = None
-        img_response = requests.get(image_url, stream=True)
-        if img_response.status_code == requests.codes.ok:
-            image_path = f'covers/{img_name}.jpg'
-            with default_storage.open(image_path, 'wb+') as image_dest:
-                for chunk in img_response.iter_content(chunk_size=128):
-                    image_dest.write(chunk)
         language_code = google_book.get('language')
         partial_date = google_book.get('publishedDate')
         if partial_date and len(partial_date) < 5:
             partial_date = f'{partial_date}-01-01'
+        elif partial_date and len(partial_date) < 8:
+            partial_date = f'{partial_date}-01'
         pub_date = partial_date
         n_book, book_created = Book.objects.get_or_create(
             title=title,
             pub_date=pub_date,
             isbn=isbn,
             pages_num=pages_num,
-            cover=image_path,
             language=Language.objects.get(code=language_code))
         authors = google_book.get('authors')
         if authors:
@@ -169,6 +163,18 @@ def google_save(request):
                     name=name)
                 n_author.save()
                 n_book.authors.add(n_author)
+        try:
+            image_url = google_book.get('imageLinks', {}).get('thumbnail')
+            img_name = f'{slugify(title)}.jpg'
+            # image_path = f'covers/{img_name}.jpg'
+            img_response = requests.get(image_url, stream=True)
+            if img_response.status_code == requests.codes.ok:
+                img_obj = Image.open(img_response.raw)
+                blob = BytesIO()
+                img_obj.save(blob, 'JPEG')  
+                n_book.cover.save(img_name, File(blob))
+        except requests.exceptions.RequestException:
+            messages.info(request, 'Book cover is not avaible')
         data = {
             'book_created': book_created,
         }
