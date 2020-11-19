@@ -4,9 +4,9 @@
 A web application for book collection management.
 
 ### Main functionality
-- manually add / edit / delete books 
-- import data from Google Books API 
-
+- manually add / edit / delete books
+- import data from Google Books API
+- Exposed API for book search
 
 ## Built with:
 * [Django](https://www.djangoproject.com/)

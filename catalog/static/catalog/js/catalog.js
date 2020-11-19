@@ -1,8 +1,9 @@
 $(function () {
   // alerts auto-close
-  window.setTimeout(function () {
+  function closeMsg() {
     $('.alert').alert('close');
-  }, 3000);
+  }
+  window.setTimeout(closeMsg, 3000);
 
   // pagination
   $('#js-load-more').on('submit', function () {
@@ -39,8 +40,13 @@ $(function () {
       data: form.serialize(),
       type: form.attr('method'),
       dataType: 'json',
+      timeout: 3000,
       success: function (data) {
-        form.closest('tr').hide(1000);
+        if (data.book_created) {
+          form.closest('tr').hide(1000);
+        }
+        $('#js-messages').append(data.messages_html);
+        window.setTimeout(closeMsg, 3000);
       }
     });
     return false;

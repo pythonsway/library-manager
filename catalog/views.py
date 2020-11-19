@@ -56,19 +56,19 @@ class BookDetailView(DetailView):
 class BookCreatetView(SuccessMessageMixin, CreateView):
     model = Book
     form_class = BookForm
-    success_message = '"%(title)s" was created'
+    success_message = 'Book was created'
 
 
 class BookUpdatetView(SuccessMessageMixin, UpdateView):
     model = Book
     form_class = BookForm
-    success_message = '"%(title)s" was updated'
+    success_message = 'Book was updated'
 
 
 class BookDeleteView(SuccessMessageMixin, DeleteView):
     model = Book
     success_url = reverse_lazy('catalog')
-    success_message = '"%(title)s" was deleted'
+    success_message = 'Book was deleted'
 
     def delete(self, request, *args, **kwargs):
         messages.warning(self.request, self.success_message)
@@ -139,47 +139,56 @@ def google_save(request):
         for id in identifiers:
             if id.get('type') == 'ISBN_13':
                 isbn = id.get('identifier')
-        if Book.objects.filter(isbn=isbn).exists():
-            messages.info(request, f'{title} already exists')
-            return redirect('catalog')
-        pages_num = google_book.get('pageCount')
-        language_code = google_book.get('language')
-        partial_date = google_book.get('publishedDate')
-        if partial_date and len(partial_date) < 5:
-            partial_date = f'{partial_date}-01-01'
-        elif partial_date and len(partial_date) < 8:
-            partial_date = f'{partial_date}-01'
-        pub_date = partial_date
-        n_book, book_created = Book.objects.get_or_create(
-            title=title,
-            pub_date=pub_date,
-            isbn=isbn,
-            pages_num=pages_num,
-            language=Language.objects.get(code=language_code))
-        authors = google_book.get('authors')
-        if authors:
-            for name in authors:
-                n_author, author_created = Author.objects.get_or_create(
-                    name=name)
-                n_author.save()
-                n_book.authors.add(n_author)
-        try:
-            image_url = google_book.get('imageLinks', {}).get('thumbnail')
-            img_name = f'{slugify(title)}.jpg'
-            img_response = requests.get(image_url, stream=True)
-            if img_response.status_code == requests.codes.ok:
-                img_obj = Image.open(img_response.raw)
-                img_io = BytesIO()
-                img_obj.save(img_io, 'JPEG')
-                img_file = ContentFile(img_io.getvalue())
-                n_book.cover.save(img_name, img_file, save=False)
-                n_book.save()
-        except requests.exceptions.RequestException:
-            messages.info(request, 'Book cover is not avaible')
+        if isbn and Book.objects.filter(isbn=isbn).exists():
+            messages.info(request, 'Book already exists')
+            book_created = False
+        else:
+            pages_num = google_book.get('pageCount')
+            language_code = google_book.get('language')
+            partial_date = google_book.get('publishedDate')
+            if partial_date and len(partial_date) < 5:
+                partial_date = f'{partial_date}-01-01'
+            elif partial_date and len(partial_date) < 8:
+                partial_date = f'{partial_date}-01'
+            pub_date = partial_date
+            n_book, book_created = Book.objects.get_or_create(
+                title=title,
+                pub_date=pub_date,
+                isbn=isbn,
+                pages_num=pages_num,
+                language=Language.objects.get(code=language_code))
+            authors = google_book.get('authors')
+            if authors:
+                for name in authors:
+                    n_author, author_created = Author.objects.get_or_create(
+                        name=name)
+                    n_author.save()
+                    n_book.authors.add(n_author)
+            try:
+                image_url = google_book.get('imageLinks', {}).get('thumbnail')
+                img_name = f'{slugify(title)}.jpg'
+                img_response = requests.get(image_url, stream=True)
+                if img_response.status_code == requests.codes.ok:
+                    img_obj = Image.open(img_response.raw)
+                    img_io = BytesIO()
+                    img_obj.save(img_io, 'JPEG')
+                    img_file = ContentFile(img_io.getvalue())
+                    n_book.cover.save(img_name, img_file, save=False)
+                    n_book.save()
+            except requests.exceptions.RequestException:
+                messages.info(request, 'Book cover is not avaible')
+            messages.success(request, 'Book saved')
+        all_messages = messages.get_messages(request)
+        messages_html = render_to_string(
+            'catalog/includes/messages.html',
+            {'messages': all_messages},
+            request=request
+        )
         data = {
+            'messages_html': messages_html,
             'book_created': book_created,
         }
-        messages.success(request, 'Book saved')
+        print(messages_html)
         return JsonResponse(data)
     return redirect('catalog')
 
