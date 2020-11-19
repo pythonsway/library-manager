@@ -26,7 +26,7 @@ API
             </ul>
             <p class="card-text">Example:</p>
             <p><code>{{ request.scheme }}://{{ request.get_host }}{% url 'api-books' %}?title=rich&author=david&start_date=2010&end_date=2015&language=english</code></p>
-            <p class="card-text">If the request succeeds, the server responds with a 200 OK HTTP status code the results in JSON:</p>
+            <p class="card-text">If the request succeeds, the server responds with a 200 OK HTTP status code with the results in JSON:</p>
             <p><code>{
                 "count": 1,
                 "next": null,

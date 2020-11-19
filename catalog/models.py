@@ -38,6 +38,7 @@ class Book(models.Model):
                             unique=True, validators=[RegexValidator(regex=r'\d{13}')],
                             help_text='ISBN-13 (unmbers only)')
     pages_num = models.PositiveIntegerField(default=1, null=True, blank=True,
+                                            validators=[MaxValueValidator(9999)],
                                             help_text='Number of pages')
     cover = models.ImageField(upload_to='covers/', default='default.jpg',
                               help_text='Photo cover')

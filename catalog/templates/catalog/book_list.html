@@ -44,7 +44,7 @@ Catalog
                             <tbody>
                                 {% for book in book_list %}
                                 <tr>
-                                    <td><img class="" src="{{ book.cover.url }}" width="50" alt="{{ book.title }} cover"></td>
+                                    <td><img class="" src="{{ book.cover.url }}" width="50" alt="{{ book.id }}-cover"></td>
                                     <td><a href="{% url 'book-details' book.slug %}">{{ book.title|truncatewords:12|default:"-" }}</a></td>
                                     <td>{{ book.authors.all|join:', '|default:"-" }}</td>
                                     <td class="text-right">{{ book.pub_date|date:"Y"|default:"-" }}</td>

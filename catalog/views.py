@@ -6,7 +6,7 @@ import requests
 from dal import autocomplete
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.files import File
+from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -166,13 +166,14 @@ def google_save(request):
         try:
             image_url = google_book.get('imageLinks', {}).get('thumbnail')
             img_name = f'{slugify(title)}.jpg'
-            # image_path = f'covers/{img_name}.jpg'
             img_response = requests.get(image_url, stream=True)
             if img_response.status_code == requests.codes.ok:
                 img_obj = Image.open(img_response.raw)
-                blob = BytesIO()
-                img_obj.save(blob, 'JPEG')  
-                n_book.cover.save(img_name, File(blob))
+                img_io = BytesIO()
+                img_obj.save(img_io, 'JPEG')
+                img_file = ContentFile(img_io.getvalue())
+                n_book.cover.save(img_name, img_file, save=False)
+                n_book.save()
         except requests.exceptions.RequestException:
             messages.info(request, 'Book cover is not avaible')
         data = {

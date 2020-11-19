@@ -15,6 +15,7 @@ class BookForm(forms.ModelForm):
         widgets = {
             'pub_date': forms.DateInput(format=('%Y-%m-%d'),
                                         attrs={'type': 'date', 'max': date.today}),
+            'pages_num': forms.NumberInput(attrs={'max': 9999}),
             'authors': autocomplete.ModelSelect2Multiple(url='author-autocomplete',
                                                          forward=('authors', )),
             'language': autocomplete.ModelSelect2(url='language-autocomplete'),
