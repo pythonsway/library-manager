@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'yh!lu0j*9mphj!q_6skdf)vsuw*ro=$5qj!klm62o1x!jn!+m@')
+SECRET_KEY = os.environ.get('SECRET_KEY',
+                            'yh!lu0j*9mphj!q_6skdf)vsuw*ro=$5qj!klm62o1x!jn!+m@')
 
 
 # Application definition
@@ -50,7 +51,10 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.SearchFilter'],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter'
+    ],
     'SEARCH_PARAM': 'q',
     'PAGE_SIZE': 40,
     'DATE_FORMAT': '%Y',
@@ -96,10 +100,6 @@ MESSAGE_TAGS = {
 }
 
 WSGI_APPLICATION = 'libmanager.wsgi.application'
-
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

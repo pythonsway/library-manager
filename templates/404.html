@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-Server error
+Page not found
 {% endblock %}
 
 {% block content %}
@@ -14,9 +14,10 @@ Server error
             <div class="col mx-auto">
                 <div class="py-5">
                     <h2 class="mb-4">
-                        <span>Server error</span>
+                        <span>Page not found</span>
                     </h2>
-                    <a href="{% url 'index' %}" class="btn btn-outline-secondary">Go home</a>
+                    {{ request_path }}
+                    <a href="{% url 'catalog' %}" class="btn btn-outline-secondary">Go home</a>
                 </div>
             </div>
         </div>
