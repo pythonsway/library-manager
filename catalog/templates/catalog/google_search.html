@@ -16,7 +16,7 @@ Google Books
                     <h2 class="mb-4">Search in Google Books</h2>
                     <form method="post" class="mb-4">
                         {% csrf_token %}
-                        {% include 'catalog/includes/form.html' %}
+                        {% include 'includes/form.html' %}
                         <button type="submit" class="btn btn-success">Search</button>
                         <a href="{% url 'google-search' %}" class="btn btn-outline-secondary" role="button">Erase</a>
 

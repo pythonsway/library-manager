@@ -86,15 +86,10 @@ Catalog
                         </ul>
                     </nav>
                     {% endif %}
-
-
-
-
-
                     {% else %}
                     <div class="row mt-5">
                         <div class="col">
-                            <p>Catalog is empty.</p>
+                            <p>Your catalog is empty.</p>
                         </div>
                     </div>
                     {% endif %}
@@ -116,7 +111,7 @@ Catalog
             </div>
             <form method="get" class="mb-4" novalidate>
                 <div class="modal-body">
-                    {% include 'catalog/includes/form.html' %}
+                    {% include 'includes/form.html' %}
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Search</button>

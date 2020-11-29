@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.conf import settings
 from django.core.validators import MaxValueValidator, RegexValidator
 from django.db import models
 from django.urls import reverse
@@ -29,6 +30,7 @@ class Author(models.Model):
 
 class Book(models.Model):
     """Book details."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=150, help_text='Book title')
     authors = models.ManyToManyField(Author, help_text='Author(s)')
     pub_date = models.DateField(null=True, blank=True,

@@ -1,6 +1,6 @@
 {% for book in google_books %}
 <tr>
-    {% if book.imageLinks.thumbnail %} {{client.user}}
+    {% if book.imageLinks.thumbnail %}
     <td><img class="" src="{{ book.imageLinks.thumbnail }}" width="50" alt="{{ book.title }}"></td>
     {% else %}
     <td><img class="" src="#" width="50" alt="-"></td>

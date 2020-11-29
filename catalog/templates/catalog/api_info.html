@@ -14,7 +14,7 @@ API
             <h2 class="mb-4">API</h2>
             <p class="lead">Info about usage</p>
             <hr class="my-4">
-            <p>You can perform a book search by sending an HTTP GET request to the following URI:</p>
+            <p>You can perform search of all books available in this service, by sending an HTTP GET request to the following URI:</p>
             <p><code>{{ request.scheme }}://{{ request.get_host }}{% url 'api-books' %}</code></p>
             <h3 class="mb-4">Allowed parameters:</h3>
             <ul class="list-group">
@@ -46,7 +46,7 @@ API
                 ]
             }</code></p>
             <a class="btn btn-primary btn-lg" href="{% url 'api-books' %}" role="button">API</a>
-            <a href="{% url 'catalog' %}" class="btn btn-outline-secondary" role="button">Go back</a>
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary" role="button">Go back</a>
         </div>
     </div>
 </section>

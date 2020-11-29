@@ -26,7 +26,8 @@ class BookSearchForm(forms.Form):
     title = forms.CharField(label='Book title', max_length=100)
     authors = forms.CharField(label='Authors', max_length=100)
     language = forms.ModelChoiceField(label='Language',
-                                      queryset=Language.objects.all(), to_field_name="name")
+                                      queryset=Language.objects.all(),
+                                      to_field_name="name")
     date_from = forms.DateField(label='Publication date from',
                                 widget=forms.DateInput(
                                     format=('%Y-%m-%d'), attrs={'type': 'date'}))

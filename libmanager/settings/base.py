@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'catalog.apps.CatalogConfig',
     'api.apps.ApiConfig',
-
+    'accounts.apps.AccountsConfig',
 ]
 
 REST_FRAMEWORK = {
@@ -73,6 +73,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'libmanager.urls'
+
+AUTH_USER_MODEL = 'accounts.User'
+
+LOGIN_REDIRECT_URL = 'catalog'
+LOGOUT_REDIRECT_URL = 'index'
 
 TEMPLATES = [
     {

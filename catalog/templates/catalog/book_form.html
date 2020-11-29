@@ -16,7 +16,7 @@ Book
                     <h2 class="mb-4">Book entry</h2>
                     <form enctype="multipart/form-data" method="post" class="mb-4">
                         {% csrf_token %}
-                        {% include 'catalog/includes/form.html' %}
+                        {% include 'includes/form.html' %}
                         <button type="submit" class="btn btn-success">Save</button>
                         <a href="{% url 'catalog' %}" class="btn btn-outline-secondary" role="button">Cancel</a>
                     </form>

@@ -5,6 +5,8 @@ from io import BytesIO
 import requests
 from dal import autocomplete
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
@@ -20,7 +22,17 @@ from .forms import BookForm, BookSearchForm, GoogleSearchForm
 from .models import Author, Book, Language
 
 
-class BookListView(ListView):
+def index(request):
+    if request.user.is_authenticated:
+        return redirect('catalog')
+    return render(request, 'catalog/index.html')
+
+
+def api_info(request):
+    return render(request, 'catalog/api_info.html')
+
+
+class BookListView(LoginRequiredMixin, ListView):
     model = Book
     paginate_by = 10
 
@@ -31,6 +43,7 @@ class BookListView(ListView):
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
+        qs = qs.filter(user=self.request.user)
         title = self.request.GET.get('title')
         authors = self.request.GET.get('authors')
         language = self.request.GET.get('language')
@@ -49,23 +62,27 @@ class BookListView(ListView):
         return qs
 
 
-class BookDetailView(DetailView):
+class BookDetailView(LoginRequiredMixin, DetailView):
     model = Book
 
 
-class BookCreatetView(SuccessMessageMixin, CreateView):
+class BookCreatetView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Book
     form_class = BookForm
     success_message = 'Book was created'
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-class BookUpdatetView(SuccessMessageMixin, UpdateView):
+
+class BookUpdatetView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Book
     form_class = BookForm
     success_message = 'Book was updated'
 
 
-class BookDeleteView(SuccessMessageMixin, DeleteView):
+class BookDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Book
     success_url = reverse_lazy('catalog')
     success_message = 'Book was deleted'
@@ -75,10 +92,7 @@ class BookDeleteView(SuccessMessageMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-def api_info(request):
-    return render(request, 'catalog/api_info.html')
-
-
+@login_required
 def google_search(request):
     if request.method == 'POST':
         form = GoogleSearchForm(request.POST)
@@ -129,6 +143,7 @@ def google_search(request):
     return render(request, 'catalog/google_search.html', {'form': form})
 
 
+@login_required
 def google_save(request):
     if request.method == 'POST':
         value_book = request.POST.get('book')
@@ -152,6 +167,7 @@ def google_save(request):
                 partial_date = f'{partial_date}-01'
             pub_date = partial_date
             n_book, book_created = Book.objects.get_or_create(
+                user=request.user,
                 title=title,
                 pub_date=pub_date,
                 isbn=isbn,
@@ -180,7 +196,7 @@ def google_save(request):
             messages.success(request, 'Book saved')
         all_messages = messages.get_messages(request)
         messages_html = render_to_string(
-            'catalog/includes/messages.html',
+            'includes/messages.html',
             {'messages': all_messages},
             request=request
         )
