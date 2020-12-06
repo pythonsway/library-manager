@@ -7,6 +7,11 @@
     <div class="col-lg-8 col-md-10 col-sm-12">
         <div class="card m-4">
             <div class="card-body">
+                <h3 class="card-title">Account info</h3>
+                {% if github_login %}
+                <p class="my-5">Connected via GitHub as <a href="https://github.com/{{ github_login.extra_data.login }}/" target="_blank" rel="noopener noreferrer">{{ github_login.extra_data.login }}</a></p>
+                <a href="{% url 'index' %}" class="btn btn-outline-secondary" role="button">Go back</a>
+                {% else %}
                 <h3 class="card-title">Edit personal data</h3>
                 <form method="post" novalidate>
                     {% csrf_token %}
@@ -14,6 +19,7 @@
                     <button type="submit" class="btn btn-primary">Save changes</button>
                     <a href="{% url 'index' %}" class="btn btn-outline-secondary" role="button">Cancel</a>
                 </form>
+                {% endif %}
             </div>
         </div>
     </div>

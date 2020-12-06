@@ -35,3 +35,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Media files stored on Cloudinary
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# For PostgreSQL use the built-in JSONB field to store the extracted extra_data
+# since Django 3.1 JSONField support for all backends
+# SOCIAL_AUTH_POSTGRES_JSONFIELD = True

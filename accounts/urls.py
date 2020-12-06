@@ -9,6 +9,7 @@ urlpatterns = [
     path('settings/account/',
          views.UserUpdateView.as_view(),
          name='my_account'),
+    path('oauth/', include('social_django.urls', namespace='social')),
     path('', include('django.contrib.auth.urls')),
 ]
 

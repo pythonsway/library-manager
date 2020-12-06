@@ -15,6 +15,7 @@
                     {% include 'includes/form.html' %}
                     <button type="submit" class="btn btn-primary btn-block">Log in</button>
                 </form>
+                <a class="btn btn-dark btn-block my-2" href="{% url 'social:begin' 'github' %}">Login with GitHub</a>
             </div>
             <div class="card-footer text-muted text-center">
                 New? <a href="{% url 'signup' %}">Sign up</a>

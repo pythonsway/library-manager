@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'widget_tweaks',
+    'social_django',
     'catalog.apps.CatalogConfig',
     'api.apps.ApiConfig',
     'accounts.apps.AccountsConfig',
@@ -70,6 +71,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.github.GithubOAuth2',
+    # default
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 ROOT_URLCONF = 'libmanager.urls'
@@ -78,6 +86,15 @@ AUTH_USER_MODEL = 'accounts.User'
 
 LOGIN_REDIRECT_URL = 'catalog'
 LOGOUT_REDIRECT_URL = 'index'
+
+# social-auth-app-django
+SOCIAL_AUTH_USER_MODEL = 'accounts.User'
+SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SECRET')
+SOCIAL_AUTH_LOGIN_URL = '/accounts/login/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/accounts/login/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/catalog/'
+# SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 
 TEMPLATES = [
     {
@@ -90,6 +107,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
