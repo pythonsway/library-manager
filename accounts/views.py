@@ -17,8 +17,8 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             messages.success(request, 'Account created')
-            login(request, user)
-            return redirect('index')
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('catalog')
     else:
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
