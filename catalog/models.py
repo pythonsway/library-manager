@@ -33,7 +33,7 @@ class Author(models.Model):
 
 class Book(models.Model):
     """Book details."""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
     title = models.CharField(max_length=150, help_text='Book title')
     authors = models.ManyToManyField(Author, help_text='Author(s)')
     pub_date = models.DateField(null=True, blank=True,

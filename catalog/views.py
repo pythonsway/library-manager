@@ -43,7 +43,7 @@ class BookListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
-        qs = qs.filter(user=self.request.user)
+        qs = qs.filter(users=self.request.user)
         title = self.request.GET.get('title')
         authors = self.request.GET.get('authors')
         language = self.request.GET.get('language')
@@ -72,7 +72,7 @@ class BookCreatetView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = 'Book was created'
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.users.add(self.request.user)
         return super().form_valid(form)
 
 
@@ -146,6 +146,7 @@ def google_search(request):
 @login_required
 def google_save(request):
     if request.method == 'POST':
+        user = request.user
         value_book = request.POST.get('book')
         google_book = literal_eval(value_book)
         title = google_book.get('title')
@@ -154,9 +155,14 @@ def google_save(request):
         for id in identifiers:
             if id.get('type') == 'ISBN_13':
                 isbn = id.get('identifier')
-        if isbn and Book.objects.filter(isbn=isbn).exists():
-            messages.info(request, 'Book already exists')
-            book_created = False
+        if existing_book := Book.objects.filter(isbn=isbn).first():
+            if user in existing_book.users.all():
+                messages.info(request, 'Book already added')
+                book_created = False
+            else:
+                existing_book.users.add(user)
+                messages.success(request, 'Book saved')
+                book_created = True
         else:
             pages_num = google_book.get('pageCount')
             language_code = google_book.get('language')
@@ -167,12 +173,12 @@ def google_save(request):
                 partial_date = f'{partial_date}-01'
             pub_date = partial_date
             n_book, book_created = Book.objects.get_or_create(
-                user=request.user,
                 title=title,
                 pub_date=pub_date,
                 isbn=isbn,
                 pages_num=pages_num,
                 language=Language.objects.get(code=language_code))
+            n_book.users.add(user)
             authors = google_book.get('authors')
             if authors:
                 for name in authors:
@@ -204,7 +210,6 @@ def google_save(request):
             'messages_html': messages_html,
             'book_created': book_created,
         }
-        print(messages_html)
         return JsonResponse(data)
     return redirect('catalog')
 
